@@ -1,23 +1,8 @@
 {
   "name": "tslint-tests",
   "version": "0.0.1",
+  "private": "false",
   "description": "dummy project containing dummies files to raise tslint problems and check that correction are working fine",
-  "main": "index.js",
-  "scripts": {
-    "lint": "tslint tests/*.ts -t verbose",
-    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
-  },
-  "author": {
-    "name": "Nikola Hristov",
-    "email": "nikola@nikolahristov.tech",
-    "url": "https://nikolahristov.tech"
-  },
-  "license": "MIT",
-  "devDependencies": {
-    "tslint": "5.20.1",
-    "typescript": "5.2.2",
-    "typescript-esbuild": "0.3.1"
-  },
   "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
   "bugs": {
     "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
@@ -26,8 +11,24 @@
     "type": "git",
     "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
   },
+  "license": "MIT",
+  "author": {
+    "name": "Nikola Hristov",
+    "email": "nikola@nikolahristov.tech",
+    "url": "https://nikolahristov.tech"
+  },
+  "publisher": "playform",
   "type": "module",
-  "private": "false",
+  "main": "index.js",
+  "scripts": {
+    "lint": "tslint tests/*.ts -t verbose",
+    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
+  },
+  "devDependencies": {
+    "tslint": "5.20.1",
+    "typescript": "5.2.2",
+    "typescript-esbuild": "0.3.1"
+  },
   "publishConfig": {
     "access": "public"
   }

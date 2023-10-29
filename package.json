@@ -1,35 +1,36 @@
 {
   "name": "vscode-tslint",
   "version": "0.0.1",
+  "private": "false",
   "description": "The umbrella project for the tslint client and server",
-  "main": " ",
-  "dependencies": {
-    "tslint": "5.20.1",
-    "typescript": "5.2.2"
+  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+  "bugs": {
+    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
   },
+  "license": "MIT",
   "author": {
     "name": "Nikola Hristov",
     "email": "nikola@nikolahristov.tech",
     "url": "https://nikolahristov.tech"
   },
-  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
-  "bugs": {
-    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
-  },
-  "license": "MIT",
+  "publisher": "playform",
   "type": "module",
-  "private": "false",
-  "publishConfig": {
-    "access": "public"
-  },
+  "main": " ",
   "scripts": {
     "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
   },
+  "dependencies": {
+    "tslint": "5.20.1",
+    "typescript": "5.2.2"
+  },
   "devDependencies": {
     "typescript-esbuild": "0.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
