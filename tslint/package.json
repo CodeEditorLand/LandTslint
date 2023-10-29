@@ -2,8 +2,12 @@
   "name": "tslint",
   "displayName": "TSLint (deprecated)",
   "description": "TSLint for Visual Studio Code",
-  "version": "1.0.46",
-  "author": "Microsoft Corporation",
+  "version": "0.0.1",
+  "author": {
+    "name": "Nikola Hristov",
+    "email": "nikola@nikolahristov.tech",
+    "url": "https://nikolahristov.tech"
+  },
   "license": "MIT",
   "publisher": "eg2",
   "icon": "TSLint_icon.png",
@@ -17,10 +21,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/vscode-tslint.git"
+    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
   },
   "bugs": {
-    "url": "https://github.com/Microsoft/vscode-tslint/issues"
+    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
   },
   "categories": [
     "Programming Languages",
@@ -32,7 +36,6 @@
   "engines": {
     "vscode": "1.54.0"
   },
-
   "activationEvents": [
     "onLanguage:typescript",
     "onLanguage:typescriptreact",
@@ -240,7 +243,8 @@
   "scripts": {
     "vscode:prepublish": "cd ../tslint-server && npm run compile && cd ../tslint && tsc -p ./",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
   },
   "devDependencies": {
     "@types/vscode": "1.83.1",
@@ -253,10 +257,17 @@
     "glob": "10.3.10",
     "mocha": "10.2.0",
     "typescript": "5.2.2",
-    "vscode-test": "1.5.0"
+    "vscode-test": "1.5.0",
+    "typescript-esbuild": "0.3.1"
   },
   "dependencies": {
     "global": "4.4.0",
     "vscode-languageclient": "9.0.1"
+  },
+  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+  "type": "module",
+  "private": "false",
+  "publishConfig": {
+    "access": "public"
   }
 }

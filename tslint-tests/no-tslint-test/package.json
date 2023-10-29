@@ -1,13 +1,33 @@
 {
   "name": "tslint-issues",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Setup with no local tslint module installed",
   "main": "index.js",
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
+  "author": {
+    "name": "Nikola Hristov",
+    "email": "nikola@nikolahristov.tech",
+    "url": "https://nikolahristov.tech"
   },
+  "license": "MIT",
+  
   "devDependencies": {
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "typescript-esbuild": "0.3.1"
+  },
+  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+  "bugs": {
+    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
+  },
+  "type": "module",
+  "private": "false",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
   }
 }

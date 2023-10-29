@@ -1,11 +1,11 @@
 {
   "name": "tslint-server",
-  "version": "0.2.0",
+  "version": "0.0.1",
   "description": "TSLint Linter Server",
   "engines": {
     "node": "*"
   },
-  "private": true,
+  "private": "false",
   "dependencies": {
     "minimatch": "9.0.3",
     "vscode-languageserver": "9.0.1",
@@ -19,12 +19,32 @@
     "@types/semver": "7.5.4",
     "mocha": "10.2.0",
     "tslint": "5.20.1",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "typescript-esbuild": "0.3.1"
   },
   "scripts": {
     "compile": "installServerIntoExtension ../tslint ./package.json ./src/tsconfig.json && tsc -p ./src",
     "watch": "installServerIntoExtension ../tslint ./package.json ./src/tsconfig.json && tsc --watch -p ./src",
     "pretest": "tsc -p ./test",
-    "test": "mocha test/out/test"
+    "test": "mocha test/out/test",
+    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
+  },
+  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+  "bugs": {
+    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
+  },
+  "license": "MIT",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": {
+    "name": "Nikola Hristov",
+    "email": "nikola@nikolahristov.tech",
+    "url": "https://nikolahristov.tech"
   }
 }
