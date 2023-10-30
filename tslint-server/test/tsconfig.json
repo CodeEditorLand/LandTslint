@@ -6,11 +6,7 @@
 		"allowSyntheticDefaultImports": true,
 		"outDir": "out",
 		"sourceMap": true,
-		"lib": [
-			"es6"
-		]
+		"lib": ["es6"]
 	},
-	"exclude": [
-		"node_modules"
-	]
+	"exclude": ["node_modules"]
 }

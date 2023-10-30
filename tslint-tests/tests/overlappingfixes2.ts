@@ -1,8 +1,5 @@
-console.log("foo")
+console.log("foo");
 
+console.log("bar");
 
-console.log("bar")
-
-
-console.log("baz")
-
+console.log("baz");

@@ -1,4 +1,3 @@
-
 /**
  * A helper to delay execution of a task that is being requested often.
  *
@@ -27,7 +26,7 @@ export interface ITask<T> {
 }
 
 export interface ValueCallback {
-	(value:any):any;
+	(value: any): any;
 }
 
 export class Delayer<T> {
@@ -43,10 +42,12 @@ export class Delayer<T> {
 		this.task = null;
 	}
 
-	public trigger(task: ITask<T>, delay: number = this.defaultDelay): Promise<T> {
+	public trigger(
+		task: ITask<T>,
+		delay: number = this.defaultDelay
+	): Promise<T> {
 		this.task = task;
 		this.cancelTimeout();
-
 
 		if (!this.completionPromise) {
 			this.completionPromise = new Promise<T>((resolve) => {
@@ -59,8 +60,6 @@ export class Delayer<T> {
 				return result;
 			});
 		}
-
-
 
 		if (!this.completionPromise) {
 			this.completionPromise = new Promise<T>((resolve) => {

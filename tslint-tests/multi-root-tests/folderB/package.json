@@ -1,39 +1,39 @@
 {
-  "name": "tslint-issues",
-  "version": "0.0.1",
-  "private": "false",
-  "description": "dummy project containing dummies files to raise tslint problems and check that correction are working fine",
-  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
-  "bugs": {
-    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
-  },
-  "license": "MIT",
-  "author": {
-    "name": "Nikola Hristov",
-    "email": "nikola@nikolahristov.tech",
-    "url": "https://nikolahristov.tech"
-  },
-  "publisher": "playform",
-  "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "lint": "tslint tests/*.ts -t verbose",
-    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
-  },
-  "dependencies": {
-    "gulp": "4.0.2",
-    "gulp-tslint": "8.1.4",
-    "tslint": "5.20.1"
-  },
-  "devDependencies": {
-    "typescript": "5.2.2",
-    "typescript-esbuild": "0.3.1"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+	"name": "tslint-issues",
+	"version": "0.0.1",
+	"private": "false",
+	"description": "dummy project containing dummies files to raise tslint problems and check that correction are working fine",
+	"homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Nikola Hristov",
+		"email": "nikola@nikolahristov.tech",
+		"url": "https://nikolahristov.tech"
+	},
+	"publisher": "playform",
+	"type": "module",
+	"main": "index.js",
+	"scripts": {
+		"lint": "tslint tests/*.ts -t verbose",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'"
+	},
+	"dependencies": {
+		"gulp": "4.0.2",
+		"gulp-tslint": "8.1.4",
+		"tslint": "5.20.1"
+	},
+	"devDependencies": {
+		"typescript": "5.2.2",
+		"typescript-esbuild": "0.3.1"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
 }
