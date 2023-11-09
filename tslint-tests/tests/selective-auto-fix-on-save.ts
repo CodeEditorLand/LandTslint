@@ -2,4 +2,5 @@
 // should not be fixed
 //    "tslint.autoFixOnSave": ["arrow-parens"],
 
-[1, 2].map((num) => console.log("test: " + num));
+[1, 2].map(num => console.log('test: ' + num));
+

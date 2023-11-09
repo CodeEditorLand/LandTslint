@@ -1,51 +1,30 @@
 {
-	"name": "tslint-server",
-	"version": "0.0.1",
-	"private": "false",
-	"description": "TSLint Linter Server",
-	"homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
-	"bugs": {
-		"url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
-	},
-	"license": "MIT",
-	"author": {
-		"name": "Nikola Hristov",
-		"email": "nikola@nikolahristov.tech",
-		"url": "https://nikolahristov.tech"
-	},
-	"publisher": "playform",
-	"type": "module",
-	"scripts": {
-		"compile": "installServerIntoExtension ../tslint ./package.json ./src/tsconfig.json && tsc -p ./src",
-		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
-		"pretest": "tsc -p ./test",
-		"test": "mocha test/out/test",
-		"watch": "installServerIntoExtension ../tslint ./package.json ./src/tsconfig.json && tsc --watch -p ./src"
-	},
-	"dependencies": {
-		"minimatch": "9.0.3",
-		"semver": "7.5.4",
-		"vscode-languageserver": "9.0.1",
-		"vscode-uri": "3.0.8"
-	},
-	"devDependencies": {
-		"@types/minimatch": "5.1.2",
-		"@types/mocha": "10.0.3",
-		"@types/node": "20.8.9",
-		"@types/semver": "7.5.4",
-		"mocha": "10.2.0",
-		"tslint": "5.20.1",
-		"typescript": "5.2.2",
-		"typescript-esbuild": "0.3.1"
-	},
-	"engines": {
-		"node": "*"
-	},
-	"publishConfig": {
-		"access": "public"
-	}
+  "name": "tslint-server",
+  "version": "0.2.0",
+  "description": "TSLint Linter Server",
+  "engines": {
+    "node": "*"
+  },
+  "private": true,
+  "dependencies": {
+    "minimatch": "^3.0.0",
+    "vscode-languageserver": "^5.0.3",
+    "semver": "^5.1.0",
+    "vscode-uri": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/minimatch": "^3.0.3",
+    "@types/mocha": "^8.2.1",
+    "@types/node": "^10.3.0",
+    "@types/semver": "^5.3.30",
+    "mocha": "^6.2.3",
+    "tslint": "^5.18.0",
+    "typescript": "^3.0.1"
+  },
+  "scripts": {
+    "compile": "installServerIntoExtension ../tslint ./package.json ./src/tsconfig.json && tsc -p ./src",
+    "watch": "installServerIntoExtension ../tslint ./package.json ./src/tsconfig.json && tsc --watch -p ./src",
+    "pretest": "tsc -p ./test",
+    "test": "mocha test/out/test"
+  }
 }

@@ -6,8 +6,13 @@
 		"strictNullChecks": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"lib": ["es6"],
+		"lib": [
+			"es6"
+		],
 		"sourceMap": true
 	},
-	"exclude": ["node_modules", "server"]
+	"exclude": [
+		"node_modules",
+		"server"
+	]
 }

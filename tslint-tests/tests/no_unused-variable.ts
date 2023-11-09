@@ -1,4 +1,4 @@
-import {} from "diff";
+import {  } from "diff";
 
 import { A, B } from "parse-json";
 
