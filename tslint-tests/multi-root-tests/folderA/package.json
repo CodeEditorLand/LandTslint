@@ -5,12 +5,15 @@
   "license": "ISC",
   "author": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "lint": "tslint ../../tests/*.ts -t verbose"
+  },
   "dependencies": {
-    "gulp": "3.9.1",
-    "gulp-tslint": "8.0.0"
+    "gulp": "^3.9.1",
+    "gulp-tslint": "^8.0.0",
+    "tslint": "^5.0.0"
   },
   "devDependencies": {
-    "typescript": "2.2.2"
+    "typescript": "^2.2.2"
   }
 }

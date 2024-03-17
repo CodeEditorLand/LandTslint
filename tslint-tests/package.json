@@ -5,8 +5,11 @@
   "license": "ISC",
   "author": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "lint": "tslint tests/*.ts -t verbose"
+  },
   "devDependencies": {
-    "typescript": "2.6.2"
+    "tslint": "^5.11.0",
+    "typescript": "^2.6.2"
   }
 }
