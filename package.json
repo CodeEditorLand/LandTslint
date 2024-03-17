@@ -1,14 +1,14 @@
 {
-  "name": "vscode-tslint",
-  "version": "1.0.1",
+  "author": "egamma",
+  "dependencies": {
+    "typescript": "2.9.1"
+  },
   "description": "The umbrella project for the tslint client and server",
+  "main": " ",
+  "name": "vscode-tslint",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Microsoft/vscode-tslint.git"
   },
-  "author": "egamma",
-  "main": " ",
-  "dependencies": {
-    "typescript": "^2.9.1"
-  }
+  "version": "1.0.1"
 }

@@ -1,12 +1,12 @@
 {
-  "name": "tslint-tests",
-  "version": "1.0.0",
-  "description": "dummy project containing dummies files to raise tslint problems and check that correction are working fine",
-  "license": "ISC",
   "author": "",
-  "main": "index.js",
-  "scripts": {},
+  "description": "dummy project containing dummies files to raise tslint problems and check that correction are working fine",
   "devDependencies": {
-    "typescript": "^2.6.2"
-  }
+    "typescript": "2.6.2"
+  },
+  "license": "ISC",
+  "main": "index.js",
+  "name": "tslint-tests",
+  "scripts": {},
+  "version": "1.0.0"
 }
