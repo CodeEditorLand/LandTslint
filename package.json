@@ -4,8 +4,8 @@
   "description": "The umbrella project for the tslint client and server",
   "main": " ",
   "dependencies": {
-    "tslint": "5.7.0",
-    "typescript": "2.9.1"
+    "tslint": "5.20.1",
+    "typescript": "5.4.2"
   },
   "repository": {
     "type": "git",
