@@ -1,13 +1,31 @@
 {
-	"activationEvents": [
-		"onLanguage:typescript",
-		"onLanguage:typescriptreact",
-		"onLanguage:javascript",
-		"onLanguage:javascriptreact",
-		"onCommand:tslint.fixAllProblems",
-		"onCommand:tslint.createConfig",
-		"onCommand:tslint.showOutputChannel"
-	],
+	"name": "tslint",
+	"displayName": "TSLint (deprecated)",
+	"version": "0.0.1",
+	"private": false,
+	"description": "TSLint for Visual Studio Code",
+	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/Foundation/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "Playform",
+		"email": "Hello@Playform.Cloud",
+		"url": "https://playform.cloud"
+	},
+	"type": "module",
+	"main": "./out/extension",
+	"scripts": {
+		"compile": "tsc -p ./",
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
+		"vscode:prepublish": "cd ../tslint-server && npm run compile && cd ../tslint && tsc -p ./",
+		"watch": "tsc -watch -p ./"
+	},
 	"contributes": {
 		"commands": [
 			{
@@ -202,11 +220,19 @@
 			}
 		]
 	},
+	"activationEvents": [
+		"onLanguage:typescript",
+		"onLanguage:typescriptreact",
+		"onLanguage:javascript",
+		"onLanguage:javascriptreact",
+		"onCommand:tslint.fixAllProblems",
+		"onCommand:tslint.createConfig",
+		"onCommand:tslint.showOutputChannel"
+	],
 	"dependencies": {
 		"global": "4.4.0",
 		"vscode-languageclient": "9.0.1"
 	},
-	"description": "TSLint for Visual Studio Code",
 	"devDependencies": {
 		"@types/glob": "8.1.0",
 		"@types/mocha": "10.0.6",
@@ -218,21 +244,14 @@
 		"typescript-esbuild": "0.4.5",
 		"vscode-test": "1.5.0"
 	},
-	"displayName": "TSLint (deprecated)",
+	"publishConfig": {
+		"access": "public"
+	},
+	"icon": "TSLint_icon.png",
 	"galleryBanner": {
 		"color": "#5c2d91",
 		"theme": "dark"
 	},
-	"icon": "TSLint_icon.png",
-	"main": "./out/extension",
-	"name": "tslint",
-	"scripts": {
-		"compile": "tsc -p ./",
-		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'",
-		"vscode:prepublish": "cd ../tslint-server && npm run compile && cd ../tslint && tsc -p ./",
-		"watch": "tsc -watch -p ./"
-	},
-	"type": "module",
 	"workspaceTrust": {
 		"description": "Custom tslint rules can run arbitrary code from the workspace.",
 		"request": "onStart"
