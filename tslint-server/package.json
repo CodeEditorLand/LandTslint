@@ -27,15 +27,15 @@
 		"prepublishOnly": "Build 'Source/**/*.ts'"
 	},
 	"dependencies": {
-		"minimatch": "^3.0.0",
-		"semver": "^5.1.0"
+		"minimatch": "9.0.4",
+		"semver": "7.6.0"
 	},
 	"devDependencies": {
 		"@playform/build": "0.0.7",
 		"@playform/document": "0.0.6",
-		"@types/minimatch": "^3.0.3",
-		"@types/node": "^10.3.0",
-		"@types/semver": "^5.3.30"
+		"@types/minimatch": "5.1.2",
+		"@types/node": "20.12.7",
+		"@types/semver": "7.5.8"
 	},
 	"publishConfig": {
 		"access": "public"
