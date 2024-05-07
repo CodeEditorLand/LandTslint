@@ -54,6 +54,7 @@ class SettingsCache {
 				resolve(settings[0]);
 			});
 		}
+
 		this.promise = Promise.resolve(globalSettings);
 		return this.promise;
 	}
