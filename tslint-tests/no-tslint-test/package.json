@@ -1,13 +1,13 @@
 {
-	"name": "tslint-issues",
-	"description": "Setup with no local tslint module installed",
-	"main": "index.js",
-	"scripts": {
-		"Document": "Document 'Source/**/*.ts'",
-		"prepublishOnly": "Build 'Source/**/*.ts'"
-	},
-	"dependencies": {},
-	"devDependencies": {
-		"@playform/build": "0.0.7"
-	}
+  "name": "tslint-issues",
+  "version": "1.0.0",
+  "description": "Setup with no local tslint module installed",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "typescript": "^2.2.2"
+  }
 }
