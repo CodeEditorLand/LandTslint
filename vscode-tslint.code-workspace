@@ -1,18 +1,18 @@
 {
 	"folders": [
 		{
-			"path": "tslint",
+			"path": "tslint"
 		},
 		{
-			"path": "tslint-server",
+			"path": "tslint-server"
 		},
 		{
-			"path": "tslint-tests",
-		},
+			"path": "tslint-tests"
+		}
 	],
 	"settings": {
 		"editor.formatOnSave": false,
 		"npm.enableScriptExplorer": true,
-		"npm.exclude": "**/tslint/server/**",
-	},
+		"npm.exclude": "**/tslint/server/**"
+	}
 }
