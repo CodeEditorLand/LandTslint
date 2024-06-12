@@ -203,13 +203,13 @@
 		]
 	},
 	"dependencies": {
-		"global": "^4.4.0"
+		"global": "4.4.0"
 	},
 	"description": "TSLint for Visual Studio Code",
 	"devDependencies": {
-		"@types/glob": "^8.1.0",
-		"@types/node": "^20.14.2",
-		"glob": "^10.4.1"
+		"@types/glob": "8.1.0",
+		"@types/node": "20.14.2",
+		"glob": "10.4.1"
 	},
 	"displayName": "TSLint (deprecated)",
 	"galleryBanner": {
