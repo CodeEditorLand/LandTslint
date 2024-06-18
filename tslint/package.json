@@ -30,7 +30,7 @@
     "multi-root ready"
   ],
   "engines": {
-    "vscode": "^1.54.0"
+    "vscode": "1.54.0"
   },
 
   "activationEvents": [
@@ -243,20 +243,20 @@
     "watch": "tsc -watch -p ./"
   },
   "devDependencies": {
-    "@types/vscode": "^1.54.0",
-    "@types/glob": "^7.1.3",
-    "@types/mocha": "^8.0.4",
-    "@types/node": "^12.11.7",
-    "eslint": "^7.19.0",
-    "@typescript-eslint/eslint-plugin": "^4.14.1",
-    "@typescript-eslint/parser": "^4.14.1",
-    "glob": "^7.1.6",
-    "mocha": "^8.2.1",
-    "typescript": "^4.1.3",
-    "vscode-test": "^1.5.0"
+    "@types/vscode": "1.90.0",
+    "@types/glob": "8.1.0",
+    "@types/mocha": "10.0.6",
+    "@types/node": "20.14.5",
+    "eslint": "9.5.0",
+    "@typescript-eslint/eslint-plugin": "7.13.1",
+    "@typescript-eslint/parser": "7.13.1",
+    "glob": "10.4.1",
+    "mocha": "10.4.0",
+    "typescript": "5.4.5",
+    "vscode-test": "1.5.0"
   },
   "dependencies": {
-    "global": "^4.3.2",
-    "vscode-languageclient": "^5.0.1"
+    "global": "4.4.0",
+    "vscode-languageclient": "9.0.1"
   }
 }

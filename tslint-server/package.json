@@ -7,19 +7,19 @@
   },
   "private": true,
   "dependencies": {
-    "minimatch": "^3.0.0",
-    "vscode-languageserver": "^5.0.3",
-    "semver": "^5.1.0",
-    "vscode-uri": "^1.0.1"
+    "minimatch": "9.0.4",
+    "vscode-languageserver": "9.0.1",
+    "semver": "7.6.2",
+    "vscode-uri": "3.0.8"
   },
   "devDependencies": {
-    "@types/minimatch": "^3.0.3",
-    "@types/mocha": "^8.2.1",
-    "@types/node": "^10.3.0",
-    "@types/semver": "^5.3.30",
-    "mocha": "^6.2.3",
-    "tslint": "^5.18.0",
-    "typescript": "^3.0.1"
+    "@types/minimatch": "5.1.2",
+    "@types/mocha": "10.0.6",
+    "@types/node": "20.14.5",
+    "@types/semver": "7.5.8",
+    "mocha": "10.4.0",
+    "tslint": "5.20.1",
+    "typescript": "5.4.5"
   },
   "scripts": {
     "compile": "installServerIntoExtension ../tslint ./package.json ./src/tsconfig.json && tsc -p ./src",
