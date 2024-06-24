@@ -210,12 +210,12 @@
 		"onCommand:tslint.showOutputChannel"
 	],
 	"dependencies": {
-		"global": "^4.3.2"
+		"global": "^4.4.0"
 	},
 	"devDependencies": {
-		"@types/glob": "^7.1.3",
-		"@types/node": "^12.11.7",
-		"glob": "^7.1.6"
+		"@types/glob": "^8.1.0",
+		"@types/node": "^20.14.8",
+		"glob": "^10.4.2"
 	},
 	"icon": "TSLint_icon.png",
 	"galleryBanner": {
