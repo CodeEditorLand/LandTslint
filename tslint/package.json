@@ -214,8 +214,8 @@
 	},
 	"devDependencies": {
 		"@types/glob": "8.1.0",
-		"@types/node": "20.14.5",
-		"glob": "10.4.1"
+		"@types/node": "20.14.9",
+		"glob": "10.4.2"
 	},
 	"icon": "TSLint_icon.png",
 	"galleryBanner": {
