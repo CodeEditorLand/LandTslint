@@ -1,13 +1,13 @@
 {
 	"dependencies": {
-		"minimatch": "^3.0.0",
-		"semver": "^5.1.0"
+		"minimatch": "3.0.0",
+		"semver": "5.1.0"
 	},
 	"description": "TSLint Linter Server",
 	"devDependencies": {
-		"@types/minimatch": "^3.0.3",
-		"@types/node": "^10.3.0",
-		"@types/semver": "^5.3.30"
+		"@types/minimatch": "3.0.3",
+		"@types/node": "10.3.0",
+		"@types/semver": "5.3.30"
 	},
 	"name": "tslint-server",
 	"scripts": {
