@@ -5,7 +5,7 @@
 		"compile": "installServerIntoExtension ../tslint ./package.json ./src/tsconfig.json && tsc -p ./src"
 	},
 	"dependencies": {
-		"minimatch": "3.0.0",
+		"minimatch": "3.0.5",
 		"semver": "5.1.0"
 	},
 	"devDependencies": {
