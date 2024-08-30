@@ -1,6 +1,0 @@
-{
-	"dependencies": {},
-	"description": "The umbrella project for the tslint client and server",
-	"main": " ",
-	"name": "vscode-tslint"
-}

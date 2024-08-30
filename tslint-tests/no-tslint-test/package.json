@@ -1,7 +1,0 @@
-{
-	"dependencies": {},
-	"description": "Setup with no local tslint module installed",
-	"devDependencies": {},
-	"main": "index.js",
-	"name": "tslint-issues"
-}

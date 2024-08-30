@@ -1,8 +1,0 @@
-{
-	"dependencies": {},
-	"description": "dummy project containing dummies files to raise tslint problems and check that correction are working fine",
-	"devDependencies": {},
-	"main": "index.js",
-	"name": "folder-a-tslint-issues",
-	"scripts": {}
-}
