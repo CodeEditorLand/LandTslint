@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "folderA"
+		},
+		{
+			"path": "folderB"
+		}
+	],
+	"settings": {
+		"files.autoSave": "off",
+		"tslint.alwaysShowRuleFailuresAsWarnings": false,
+		"tslint.enable": true
+		//"tslint.trace.server": "verbose"
+	}
+}
