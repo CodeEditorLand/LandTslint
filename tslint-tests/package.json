@@ -1,15 +1,7 @@
 {
-  "name": "tslint-tests",
-  "version": "1.0.0",
-  "description": "dummy project containing dummies files to raise tslint problems and check that correction are working fine",
-  "main": "index.js",
-  "scripts": {
-    "lint": "tslint tests/*.ts -t verbose"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "tslint": "^5.11.0",
-    "typescript": "^2.6.2"
-  }
+	"description": "dummy project containing dummies files to raise tslint problems and check that correction are working fine",
+	"devDependencies": {},
+	"main": "index.js",
+	"name": "tslint-tests",
+	"scripts": {}
 }
