@@ -9,11 +9,7 @@
 		"strictNullChecks": true,
 		"sourceMap": true,
 		"outDir": "../../tslint/server",
-		"lib": [
-			"es6"
-		]
+		"lib": ["es6"]
 	},
-	"exclude": [
-		"node_modules"
-	]
+	"exclude": ["node_modules"]
 }

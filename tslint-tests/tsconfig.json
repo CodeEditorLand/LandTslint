@@ -1,10 +1,10 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es5",
-        "noImplicitAny": false,
-        "sourceMap": false,
-        "noUnusedLocals": true,
-        "jsx": "preserve"
-    }
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es5",
+		"noImplicitAny": false,
+		"sourceMap": false,
+		"noUnusedLocals": true,
+		"jsx": "preserve"
+	}
 }
