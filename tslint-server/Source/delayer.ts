@@ -55,8 +55,10 @@ export class Delayer<T> {
 			}).then(() => {
 				this.completionPromise = null;
 				this.onSuccess = null;
+
 				var result = this.task!();
 				this.task = null;
+
 				return result;
 			});
 		}
@@ -67,8 +69,10 @@ export class Delayer<T> {
 			}).then(() => {
 				this.completionPromise = null;
 				this.onSuccess = null;
+
 				const task = this.task;
 				this.task = null;
+
 				return task!();
 			});
 		}

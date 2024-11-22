@@ -119,6 +119,7 @@ export class TsLintRunner {
 		}
 
 		const library = this.document2LibraryCache.get(filePath)!();
+
 		if (!library) {
 			return {
 				lintResult: emptyLintResult,
@@ -133,6 +134,7 @@ export class TsLintRunner {
 		}
 
 		this.trace("About to validate " + filePath);
+
 		return this.doRun(filePath, contents, library, configuration, warnings);
 	}
 
@@ -146,8 +148,10 @@ export class TsLintRunner {
 		const normalizedPath = path.normalize(filePath);
 		// we only show diagnostics targetting this open document, some tslint rule return diagnostics for other documents/files
 		const normalizedFiles = new Map<string, string>();
+
 		return failures.filter((each) => {
 			const fileName = each.getFileName();
+
 			if (!normalizedFiles.has(fileName)) {
 				normalizedFiles.set(fileName, path.normalize(fileName));
 			}
@@ -170,9 +174,12 @@ export class TsLintRunner {
 		}
 
 		let sortedFailures = this.sortFailures(failures);
+
 		let nonOverlapping: tslint.Replacement[] = [];
+
 		for (let i = 0; i < sortedFailures.length; i++) {
 			let replacements = this.getReplacements(sortedFailures[i].getFix());
+
 			if (
 				i === 0 ||
 				!overlaps(
@@ -226,13 +233,17 @@ export class TsLintRunner {
 		warningsOutput: string[],
 	): void {
 		this.trace(`loadLibrary for ${filePath}`);
+
 		const getGlobalPath = () =>
 			this.getGlobalPackageManagerPath(configuration.packageManager);
+
 		const directory = path.dirname(filePath);
 
 		let np: string | undefined = undefined;
+
 		if (configuration && configuration.nodePath) {
 			const exists = fs.existsSync(configuration.nodePath);
+
 			if (exists) {
 				np = configuration.nodePath;
 			} else {
@@ -247,6 +258,7 @@ export class TsLintRunner {
 		if (np) {
 			try {
 				tsLintPath = this.resolveTsLint(np, np!);
+
 				if (tsLintPath.length === 0) {
 					tsLintPath = this.resolveTsLint(getGlobalPath(), directory);
 				}
@@ -256,6 +268,7 @@ export class TsLintRunner {
 		} else {
 			try {
 				tsLintPath = this.resolveTsLint(undefined, directory);
+
 				if (tsLintPath.length === 0) {
 					tsLintPath = this.resolveTsLint(getGlobalPath(), directory);
 				}
@@ -266,11 +279,13 @@ export class TsLintRunner {
 
 		this.document2LibraryCache.set(filePath, () => {
 			let library;
+
 			if (!this.tslintPath2Library.has(tsLintPath)) {
 				try {
 					library = require(tsLintPath);
 				} catch (e) {
 					this.tslintPath2Library.set(tsLintPath, undefined);
+
 					return;
 				}
 				this.tslintPath2Library.set(tsLintPath, library);
@@ -292,6 +307,7 @@ export class TsLintRunner {
 
 		if (!this.globalPackageManagerPath.has(packageManager)) {
 			let path: string | undefined;
+
 			if (packageManager === "npm") {
 				path = server.Files.resolveGlobalNodePath(this.trace);
 			} else if (packageManager === "yarn") {
@@ -302,6 +318,7 @@ export class TsLintRunner {
 		this.trace(
 			`Done - Resolve Global Package Manager Path for: ${packageManager}`,
 		);
+
 		return this.globalPackageManagerPath.get(packageManager);
 	}
 
@@ -313,10 +330,12 @@ export class TsLintRunner {
 		warnings: string[],
 	): RunResult {
 		this.trace("start doValidate " + filePath);
+
 		const uri = filePath;
 
 		if (this.fileIsExcluded(configuration, filePath)) {
 			this.trace(`No linting: file ${filePath} is excluded`);
+
 			return emptyResult;
 		}
 
@@ -328,8 +347,10 @@ export class TsLintRunner {
 		}
 
 		const configFile = configuration.configFile || null;
+
 		let linterConfiguration: Configuration | undefined;
 		this.trace("validateTextDocument: about to getConfiguration");
+
 		try {
 			linterConfiguration = this.getConfiguration(
 				uri,
@@ -342,6 +363,7 @@ export class TsLintRunner {
 				`No linting: exception when getting tslint configuration for ${filePath}, configFile= ${configFile}`,
 			);
 			warnings.push(getConfigurationFailureMessage(err));
+
 			return {
 				lintResult: emptyLintResult,
 				warnings,
@@ -350,12 +372,14 @@ export class TsLintRunner {
 
 		if (!linterConfiguration) {
 			this.trace(`No linting: no tslint configuration`);
+
 			return emptyResult;
 		}
 		this.trace("validateTextDocument: configuration fetched");
 
 		if (isJsDocument(filePath) && !configuration.jsEnable) {
 			this.trace(`No linting: a JS document, but js linting is disabled`);
+
 			return emptyResult;
 		}
 
@@ -366,6 +390,7 @@ export class TsLintRunner {
 			this.trace(
 				`No linting: linting with default tslint configuration is disabled`,
 			);
+
 			return emptyResult;
 		}
 
@@ -378,16 +403,19 @@ export class TsLintRunner {
 			this.trace(
 				`No linting: file is excluded using linterOptions.exclude`,
 			);
+
 			return emptyResult;
 		}
 
 		let result: tslint.LintResult;
+
 		const options: tslint.ILinterOptions = {
 			formatter: "json",
 			fix: false,
 			rulesDirectory: configuration.rulesDirectory || undefined,
 			formattersDirectory: undefined,
 		};
+
 		if (
 			configuration.traceLevel &&
 			configuration.traceLevel === "verbose"
@@ -399,6 +427,7 @@ export class TsLintRunner {
 
 		// tslint writes warnings using console.warn, capture these warnings and send them to the client
 		const originalConsoleWarn = console.warn;
+
 		const captureWarnings = (message?: any) => {
 			warnings.push(message);
 			originalConsoleWarn(message);
@@ -440,16 +469,19 @@ export class TsLintRunner {
 		this.trace("getConfiguration for" + uri);
 
 		const config = this.configCache.get(filePath);
+
 		if (config) {
 			return config;
 		}
 
 		let isDefaultConfig = false;
+
 		let linterConfiguration:
 			| tslint.Configuration.IConfigurationFile
 			| undefined = undefined;
 
 		const linter = library.Linter;
+
 		if (linter.findConfigurationPath) {
 			isDefaultConfig =
 				linter.findConfigurationPath(configFileName, filePath) ===
@@ -494,6 +526,7 @@ export class TsLintRunner {
 		};
 
 		this.configCache.set(filePath, configuration);
+
 		return this.configCache.configuration;
 	}
 
@@ -526,6 +559,7 @@ export class TsLintRunner {
 	) {
 		if (!configuration) {
 			this.trace("no tslint configuration");
+
 			return;
 		}
 		this.trace(
@@ -535,11 +569,14 @@ export class TsLintRunner {
 
 	private resolveTsLint(nodePath: string | undefined, cwd: string): string {
 		const nodePathKey = "NODE_PATH";
+
 		const app = ["console.log(require.resolve('tslint'));"].join("");
 
 		const env = process.env;
+
 		const newEnv = Object.create(null);
 		Object.keys(env).forEach((key) => (newEnv[key] = env[key]));
+
 		if (nodePath) {
 			if (newEnv[nodePathKey]) {
 				newEnv[nodePathKey] =
@@ -550,10 +587,12 @@ export class TsLintRunner {
 			this.trace(`NODE_PATH value is: ${newEnv[nodePathKey]}`);
 		}
 		newEnv.ELECTRON_RUN_AS_NODE = "1";
+
 		const spanwResults = cp.spawnSync(process.argv0, ["-e", app], {
 			cwd,
 			env: newEnv,
 		});
+
 		return spanwResults.stdout.toString().trim();
 	}
 }
@@ -571,10 +610,12 @@ function getInstallFailureMessage(
 		npm: "npm install tslint",
 		yarn: "yarn add tslint",
 	};
+
 	const globalCommands = {
 		npm: "npm install -g tslint",
 		yarn: "yarn global add tslint",
 	};
+
 	if (workspaceFolder) {
 		// workspace opened on a folder
 		return [
@@ -617,6 +658,7 @@ function isExcludedFromLinterOptions(
 
 function getConfigurationFailureMessage(err: any): string {
 	let errorMessage = `unknown error`;
+
 	if (typeof err.message === "string" || err.message instanceof String) {
 		errorMessage = err.message;
 	}

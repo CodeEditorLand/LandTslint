@@ -107,11 +107,14 @@ interface Settings {
 }
 
 let willSaveTextDocumentListener: Disposable;
+
 let configurationChangedListener: Disposable;
 
 export function activate(context: ExtensionContext) {
 	let statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 0);
+
 	let tslintStatus: Status = Status.ok;
+
 	let serverRunning: boolean = false;
 
 	statusBarItem.text = "TSLint";
@@ -149,6 +152,7 @@ export function activate(context: ExtensionContext) {
 		let isJsEnable = workspace
 			.getConfiguration("tslint", document.uri)
 			.get("jsEnable", true);
+
 		if (isJsEnable && isJavaScriptDocument(document.languageId)) {
 			return true;
 		}
@@ -159,16 +163,23 @@ export function activate(context: ExtensionContext) {
 		switch (tslintStatus) {
 			case Status.ok:
 				statusBarItem.text = "TSLint";
+
 				break;
+
 			case Status.warn:
 				statusBarItem.text = "$(alert) TSLint";
+
 				break;
+
 			case Status.error:
 				statusBarItem.text = "$(issue-opened) TSLint";
+
 				break;
 		}
 		let uri = editor ? editor.document.uri : undefined;
+
 		let enabled = workspace.getConfiguration("tslint", uri)["enable"];
+
 		let alwaysShowStatus = workspace.getConfiguration("tslint", uri)[
 			"alwaysShowStatus"
 		];
@@ -179,6 +190,7 @@ export function activate(context: ExtensionContext) {
 			(tslintStatus === Status.ok && !alwaysShowStatus)
 		) {
 			showStatusBarItem(false);
+
 			return;
 		}
 
@@ -202,11 +214,14 @@ export function activate(context: ExtensionContext) {
 	);
 	// break on start options
 	//let debugOptions = { execArgv: ["--nolazy", "--inspect-brk=6010", "--trace-warnings"] };
+
 	let debugOptions = {
 		execArgv: ["--nolazy", "--inspect=6010"],
 		cwd: process.cwd(),
 	};
+
 	let runOptions = { cwd: process.cwd() };
+
 	let serverOptions: ServerOptions = {
 		run: {
 			module: serverModulePath,
@@ -237,6 +252,7 @@ export function activate(context: ExtensionContext) {
 		initializationFailedHandler: (error) => {
 			client.error("Server initialization failed.", error);
 			client.outputChannel.show(true);
+
 			return false;
 		},
 		middleware: {
@@ -252,6 +268,7 @@ export function activate(context: ExtensionContext) {
 					return [];
 				}
 				let tslintDiagnostics: Diagnostic[] = [];
+
 				for (let diagnostic of context.diagnostics) {
 					if (diagnostic.source === "tslint") {
 						tslintDiagnostics.push(diagnostic);
@@ -263,6 +280,7 @@ export function activate(context: ExtensionContext) {
 				let newContext: CodeActionContext = Object.assign({}, context, {
 					diagnostics: tslintDiagnostics,
 				} as CodeActionContext);
+
 				return next(document, range, newContext, token);
 			},
 			workspace: {
@@ -275,6 +293,7 @@ export function activate(context: ExtensionContext) {
 						return [];
 					}
 					let result = next(params, token, next);
+
 					let scopeUri = "";
 
 					for (let item of params.items) {
@@ -286,10 +305,13 @@ export function activate(context: ExtensionContext) {
 					}
 					let resource =
 						client.protocol2CodeConverter.asUri(scopeUri);
+
 					let workspaceFolder =
 						workspace.getWorkspaceFolder(resource);
+
 					if (workspaceFolder) {
 						convertToAbsolutePaths(result[0], workspaceFolder);
+
 						if (workspaceFolder.uri.scheme === "file") {
 							result[0].workspaceFolderPath =
 								workspaceFolder.uri.fsPath;
@@ -305,6 +327,7 @@ export function activate(context: ExtensionContext) {
 	client.registerProposedFeatures();
 
 	const running = "Linter is running.";
+
 	const stopped = "Linter has stopped.";
 
 	client.onDidChangeState((event) => {
@@ -326,7 +349,9 @@ export function activate(context: ExtensionContext) {
 		});
 		client.onRequest(NoTSLintLibraryRequest.type, (params) => {
 			let uri: Uri = Uri.parse(params.source.uri);
+
 			let workspaceFolder = workspace.getWorkspaceFolder(uri);
+
 			let packageManager = workspace
 				.getConfiguration("tslint", uri)
 				.get("packageManager", "npm");
@@ -334,6 +359,7 @@ export function activate(context: ExtensionContext) {
 				getInstallFailureMessage(uri, workspaceFolder, packageManager),
 			);
 			updateStatus(Status.warn);
+
 			return {};
 		});
 	});
@@ -347,10 +373,12 @@ export function activate(context: ExtensionContext) {
 			npm: "npm install tslint",
 			yarn: "yarn add tslint",
 		};
+
 		let globalCommands = {
 			npm: "npm install -g tslint",
 			yarn: "yarn global add tslint",
 		};
+
 		if (workspaceFolder) {
 			// workspace opened on a folder
 			return [
@@ -376,10 +404,12 @@ export function activate(context: ExtensionContext) {
 		folder: WorkspaceFolder,
 	) {
 		let configFile = settings.configFile;
+
 		if (configFile) {
 			settings.configFile = convertAbsolute(configFile, folder);
 		}
 		let nodePath = settings.nodePath;
+
 		if (nodePath) {
 			settings.nodePath = convertAbsolute(nodePath, folder);
 		}
@@ -405,6 +435,7 @@ export function activate(context: ExtensionContext) {
 			return file;
 		}
 		let folderPath = folder.uri.fsPath;
+
 		if (!folderPath) {
 			return file;
 		}
@@ -417,6 +448,7 @@ export function activate(context: ExtensionContext) {
 		edits: TextEdit[],
 	): Promise<boolean> {
 		let textEditor = window.activeTextEditor;
+
 		if (textEditor && textEditor.document.uri.toString() === uri) {
 			if (
 				documentVersion !== -1 &&
@@ -425,6 +457,7 @@ export function activate(context: ExtensionContext) {
 				window.showInformationMessage(
 					`TSLint fixes are outdated and can't be applied to the document.`,
 				);
+
 				return true;
 			}
 			return textEditor.edit((mutator) => {
@@ -445,6 +478,7 @@ export function activate(context: ExtensionContext) {
 		edits: TextEdit[],
 	) {
 		let textEditor = window.activeTextEditor;
+
 		if (textEditor && textEditor.document.uri.toString() === uri) {
 			if (textEditor.document.version !== documentVersion) {
 				window.showInformationMessage(
@@ -453,8 +487,11 @@ export function activate(context: ExtensionContext) {
 			}
 			// prefix disable comment with same indent as line with the diagnostic
 			let edit = edits[0];
+
 			let ruleLine = textEditor.document.lineAt(edit.range.start.line);
+
 			let prefixIndex = ruleLine.firstNonWhitespaceCharacterIndex;
+
 			let prefix = ruleLine.text.substr(0, prefixIndex);
 			edit.newText = prefix + edit.newText;
 			applyTextEdits(uri, documentVersion, edits);
@@ -468,6 +505,7 @@ export function activate(context: ExtensionContext) {
 		ruleId: string,
 	) {
 		const tslintDocBaseURL = "https://palantir.github.io/tslint/rules";
+
 		if (!ruleId) {
 			return;
 		}
@@ -483,6 +521,7 @@ export function activate(context: ExtensionContext) {
 			return;
 		}
 		let textEditor = window.activeTextEditor;
+
 		if (!textEditor) {
 			return;
 		}
@@ -499,6 +538,7 @@ export function activate(context: ExtensionContext) {
 
 	async function findTslint(rootPath: string): Promise<string> {
 		const platform = process.platform;
+
 		if (
 			platform === "win32" &&
 			(await exists(
@@ -520,11 +560,14 @@ export function activate(context: ExtensionContext) {
 
 	async function createDefaultConfiguration() {
 		let folders = workspace.workspaceFolders;
+
 		let folder: WorkspaceFolder | undefined = undefined;
+
 		if (!folders) {
 			window.showErrorMessage(
 				"A TSLint configuration file can only be generated if VS Code is opened on a folder.",
 			);
+
 			return;
 		}
 		if (folders.length === 1) {
@@ -535,22 +578,27 @@ export function activate(context: ExtensionContext) {
 					"Select the folder for generating the 'tslint.json' file",
 			};
 			folder = await window.showWorkspaceFolderPick(options);
+
 			if (!folder) {
 				return;
 			}
 		}
 		const folderPath = folder.uri.fsPath;
+
 		const tslintConfigFile = path.join(folderPath, "tslint.json");
 
 		if (fs.existsSync(tslintConfigFile)) {
 			window.showInformationMessage(
 				"A TSLint configuration file already exists.",
 			);
+
 			let document = await workspace.openTextDocument(tslintConfigFile);
 			window.showTextDocument(document);
 		} else {
 			const tslintCmd = await findTslint(folderPath);
+
 			const cmd = `${tslintCmd} --init`;
+
 			const p = exec(cmd, { cwd: folderPath, env: process.env });
 			p.on("exit", async (code: number, _signal: string) => {
 				if (code === 0) {
@@ -568,7 +616,9 @@ export function activate(context: ExtensionContext) {
 
 	function willSaveTextDocument(e: TextDocumentWillSaveEvent) {
 		let config = workspace.getConfiguration("tslint", e.document.uri);
+
 		let autoFix = config.get("autoFixOnSave", false);
+
 		if (autoFix) {
 			let document = e.document;
 			// only auto fix when the document was manually saved by the user
@@ -596,8 +646,11 @@ export function activate(context: ExtensionContext) {
 		timeBudget: number | undefined,
 	): Thenable<any> {
 		let start = Date.now();
+
 		let loopCount = 0;
+
 		let retry = false;
+
 		let lastVersion = document.version;
 
 		let promise = client
@@ -608,16 +661,19 @@ export function activate(context: ExtensionContext) {
 			.then(async (result) => {
 				while (true) {
 					// console.log('duration ', Date.now() - start);
+
 					if (timeBudget && Date.now() - start > timeBudget) {
 						console.log(
 							`TSLint auto fix on save maximum time budget (${timeBudget}ms) exceeded.`,
 						);
+
 						break;
 					}
 					if (loopCount++ > 10) {
 						console.log(
 							`TSLint auto fix on save maximum retries exceeded.`,
 						);
+
 						break;
 					}
 					if (result) {
@@ -626,9 +682,11 @@ export function activate(context: ExtensionContext) {
 							window.showInformationMessage(
 								"TSLint: Auto fix on save, fixes could not be applied (client version mismatch).",
 							);
+
 							break;
 						}
 						retry = false;
+
 						if (lastVersion !== result.documentVersion) {
 							console.log(
 								"TSLint auto fix on save, server document version different than client version",
@@ -646,10 +704,12 @@ export function activate(context: ExtensionContext) {
 								-1,
 								edits,
 							);
+
 							if (!success) {
 								window.showInformationMessage(
 									"TSLint: Auto fix on save, edits could not be applied",
 								);
+
 								break;
 							}
 						}
@@ -676,6 +736,7 @@ export function activate(context: ExtensionContext) {
 				}
 				return null;
 			});
+
 		return promise;
 	}
 

@@ -42,16 +42,20 @@ class SettingsCache {
 	async get(uri: string): Promise<Settings> {
 		if (uri === this.uri) {
 			trace("SettingsCache: cache hit for " + this.uri);
+
 			return this.promise!;
 		}
 		if (scopedSettingsSupport) {
 			this.uri = uri;
+
 			return (this.promise = new Promise<Settings>(
 				async (resolve, _reject) => {
 					trace("SettingsCache: cache updating cache for" + this.uri);
+
 					let configRequestParam = {
 						items: [{ scopeUri: uri, section: "tslint" }],
 					};
+
 					let settings = await connection.sendRequest(
 						server.ConfigurationRequest.type,
 						configRequestParam,
@@ -61,6 +65,7 @@ class SettingsCache {
 			));
 		}
 		this.promise = Promise.resolve(globalSettings);
+
 		return this.promise;
 	}
 
@@ -71,7 +76,9 @@ class SettingsCache {
 }
 
 let settingsCache = new SettingsCache();
+
 let globalSettings: Settings = <Settings>{};
+
 let scopedSettingsSupport = false;
 
 process.on("unhandledRejection", (reason, p) => {
@@ -82,11 +89,13 @@ process.on("unhandledRejection", (reason, p) => {
 
 function computeKey(diagnostic: server.Diagnostic): string {
 	let range = diagnostic.range;
+
 	return `[${range.start.line},${range.start.character},${range.end.line},${range.end.character}]-${diagnostic.code}`;
 }
 
 export interface AutoFix {
 	label: string;
+
 	documentVersion: number;
 	problem: tslint.RuleFailure;
 	edits: TSLintAutofixEdit[];
@@ -115,6 +124,7 @@ function makeDiagnostic(
 	problem: tslint.RuleFailure,
 ): server.Diagnostic {
 	let severity;
+
 	let alwaysWarning = settings && settings.alwaysShowRuleFailuresAsWarnings;
 	// tslint5 supports to assign severities to rules
 	if (
@@ -150,6 +160,7 @@ function makeDiagnostic(
 }
 
 let codeFixActions = new Map<string, Map<string, tslint.RuleFailure>>();
+
 let codeDisableRuleActions = new Map<string, Map<string, tslint.RuleFailure>>();
 
 function recordCodeAction(
@@ -159,6 +170,7 @@ function recordCodeAction(
 ): void {
 	let documentDisableRuleFixes: Map<string, AutoFix> =
 		codeDisableRuleActions[document.uri];
+
 	if (!documentDisableRuleFixes) {
 		documentDisableRuleFixes = Object.create(null);
 		codeDisableRuleActions[document.uri] = documentDisableRuleFixes;
@@ -181,6 +193,7 @@ function recordCodeAction(
 	}
 	if (!fix) {
 		let vscFix = createVscFixForRuleFailure(problem, document);
+
 		if (vscFix) {
 			fix = createAutoFix(problem, document, vscFix);
 		}
@@ -190,6 +203,7 @@ function recordCodeAction(
 	}
 
 	let documentAutoFixes: Map<string, AutoFix> = codeFixActions[document.uri];
+
 	if (!documentAutoFixes) {
 		documentAutoFixes = Object.create(null);
 		codeFixActions[document.uri] = documentAutoFixes;
@@ -202,7 +216,9 @@ function convertReplacementToAutoFix(
 	repl: tslint.Replacement,
 ): TSLintAutofixEdit {
 	let start: server.Position = document.positionAt(repl.start);
+
 	let end: server.Position = document.positionAt(repl.end);
+
 	return {
 		range: [start, end],
 		text: repl.text,
@@ -211,16 +227,20 @@ function convertReplacementToAutoFix(
 
 function getErrorMessage(err: any, document: server.TextDocument): string {
 	let errorMessage = `unknown error`;
+
 	if (typeof err.message === "string" || err.message instanceof String) {
 		errorMessage = <string>err.message;
 	}
 	let fsPath = server.Files.uriToFilePath(document.uri);
+
 	let message = `vscode-tslint: '${errorMessage}' while validating: ${fsPath} stacktrace: ${err.stack}`;
+
 	return message;
 }
 
 function getConfigurationFailureMessage(err: any): string {
 	let errorMessage = `unknown error`;
+
 	if (typeof err.message === "string" || err.message instanceof String) {
 		errorMessage = <string>err.message;
 	}
@@ -232,7 +252,9 @@ function validateAllTextDocuments(
 	documents: server.TextDocument[],
 ): void {
 	trace("validateAllTextDocuments");
+
 	let tracker = new server.ErrorMessageTracker();
+
 	documents.forEach((document) => {
 		try {
 			validateTextDocument(conn, document);
@@ -254,9 +276,11 @@ async function validateTextDocument(
 
 	let settings = await settingsCache.get(uri);
 	trace("validateTextDocument: settings fetched");
+
 	if (settings && !settings.enable) {
 		// send diagnostics event to flush existing warnings
 		connection.sendDiagnostics({ uri: uri, diagnostics: [] });
+
 		return;
 	}
 
@@ -267,6 +291,7 @@ async function validateTextDocument(
 	// tslint can only validate files on disk
 	if (Uri.parse(uri).scheme !== "file") {
 		trace(`No linting: file is not saved on disk`);
+
 		return diagnostics;
 	}
 
@@ -274,10 +299,12 @@ async function validateTextDocument(
 
 	if (!settings) {
 		trace("No linting: settings could not be loaded");
+
 		return diagnostics;
 	}
 	if (!settings.enable) {
 		trace("No linting: tslint is disabled");
+
 		return diagnostics;
 	}
 
@@ -286,6 +313,7 @@ async function validateTextDocument(
 	}
 
 	let traceLevel: "normal" | "verbose" = "normal";
+
 	if (
 		settings.trace &&
 		settings.trace.server &&
@@ -339,6 +367,7 @@ let connection: server.IConnection = server.createConnection(
 	new server.IPCMessageReader(process),
 	new server.IPCMessageWriter(process),
 );
+
 let documents: server.TextDocuments = new server.TextDocuments();
 
 documents.listen(connection);
@@ -350,13 +379,16 @@ function trace(message: string, verbose?: string): void {
 connection.onInitialize((params) => {
 	function hasClientCapability(name: string) {
 		let keys = name.split(".");
+
 		let c = params.capabilities;
+
 		for (let i = 0; c && i < keys.length; i++) {
 			c = c[keys[i]];
 		}
 		return !!c;
 	}
 	scopedSettingsSupport = hasClientCapability("workspace.configuration");
+
 	return {
 		capabilities: {
 			textDocumentSync: documents.syncKind,
@@ -372,8 +404,10 @@ documents.onDidOpen(async (event) => {
 
 documents.onDidChangeContent(async (event) => {
 	trace("onDidChangeContent");
+
 	let settings = await settingsCache.get(event.document.uri);
 	trace("onDidChangeContent: settings" + settings);
+
 	if (settings && settings.run === "onType") {
 		trace("onDidChangeContent: triggerValidateDocument");
 		triggerValidateDocument(event.document);
@@ -389,6 +423,7 @@ documents.onDidChangeContent(async (event) => {
 
 documents.onDidSave(async (event) => {
 	let settings = await settingsCache.get(event.document.uri);
+
 	if (settings && settings.run === "onSave") {
 		triggerValidateDocument(event.document);
 	}
@@ -403,12 +438,14 @@ documents.onDidClose((event) => {
 function triggerValidateDocument(document: server.TextDocument) {
 	let d = validationDelayer[document.uri];
 	trace("triggerValidation on " + document.uri);
+
 	if (!d) {
 		d = new Delayer<void>(200);
 		validationDelayer[document.uri] = d;
 	}
 	d.trigger(async () => {
 		trace("trigger validateTextDocument");
+
 		forceValidation(connection, document);
 	});
 }
@@ -427,6 +464,7 @@ function tslintConfigurationValid(): boolean {
 	try {
 		documents.all().forEach((each) => {
 			let fsPath = server.Files.uriToFilePath(each.uri);
+
 			if (fsPath) {
 				// TODO getConfiguration(fsPath, configFile);
 			}
@@ -436,6 +474,7 @@ function tslintConfigurationValid(): boolean {
 		connection.sendNotification(StatusNotification.type, {
 			state: Status.error,
 		});
+
 		return false;
 	}
 	return true;
@@ -446,6 +485,7 @@ connection.onDidChangeConfiguration((params) => {
 	trace("onDidChangeConfiguraton");
 
 	globalSettings = params.settings;
+
 	if (tslintRunner) {
 		tslintRunner.onConfigFileChange("");
 	}
@@ -460,8 +500,10 @@ connection.onDidChangeWatchedFiles((params) => {
 	// the latest configuration file we remove the config file from the module cache.
 	params.changes.forEach((element) => {
 		let configFilePath = server.Files.uriToFilePath(element.uri);
+
 		if (configFilePath) {
 			let cached = require.cache[configFilePath];
+
 			if (cached) {
 				delete require.cache[configFilePath];
 			}
@@ -478,17 +520,23 @@ connection.onDidChangeWatchedFiles((params) => {
 
 connection.onCodeAction((params) => {
 	let result: server.CodeAction[] = [];
+
 	let uri = params.textDocument.uri;
+
 	let documentVersion: number = -1;
+
 	let ruleId: string | undefined = undefined;
 
 	let documentFixes = codeFixActions[uri];
+
 	if (documentFixes) {
 		for (let diagnostic of params.context.diagnostics) {
 			let autoFix = documentFixes[computeKey(diagnostic)];
+
 			if (autoFix) {
 				documentVersion = autoFix.documentVersion;
 				ruleId = autoFix.problem.getRuleName();
+
 				let command = server.Command.create(
 					autoFix.label,
 					"_tslint.applySingleFix",
@@ -496,6 +544,7 @@ connection.onCodeAction((params) => {
 					documentVersion,
 					createTextEdit(autoFix),
 				);
+
 				let codeAction = server.CodeAction.create(
 					autoFix.label,
 					command,
@@ -507,7 +556,9 @@ connection.onCodeAction((params) => {
 		}
 		if (result.length > 0) {
 			let same: AutoFix[] = [];
+
 			let all: AutoFix[] = [];
+
 			let fixes: AutoFix[] = Object.keys(documentFixes).map(
 				(key) => documentFixes[key],
 			);
@@ -532,6 +583,7 @@ connection.onCodeAction((params) => {
 			// if the same rule warning exists more than once, provide a command to fix all these warnings
 			if (same.length > 1) {
 				let label = `Fix all: ${same[0].problem.getFailure()}`;
+
 				let command = server.Command.create(
 					label,
 					"_tslint.applySameFixes",
@@ -551,6 +603,7 @@ connection.onCodeAction((params) => {
 			// create a command to fix all the warnings with fixes
 			if (all.length > 1) {
 				let label = `Fix all auto-fixable problems`;
+
 				let command = server.Command.create(
 					label,
 					"_tslint.applyAllFixes",
@@ -577,12 +630,15 @@ connection.onCodeAction((params) => {
 	}
 	// add the fix to disable the rule
 	let disableRuleFixes = codeDisableRuleActions[uri];
+
 	if (disableRuleFixes) {
 		for (let diagnostic of params.context.diagnostics) {
 			let autoFix = disableRuleFixes[computeKey(diagnostic)];
+
 			if (autoFix) {
 				documentVersion = autoFix.documentVersion;
 				ruleId = autoFix.problem.getRuleName();
+
 				let command = server.Command.create(
 					autoFix.label,
 					"_tslint.applyDisableRule",
@@ -590,6 +646,7 @@ connection.onCodeAction((params) => {
 					documentVersion,
 					createTextEdit(autoFix),
 				);
+
 				let codeAction = server.CodeAction.create(
 					autoFix.label,
 					command,
@@ -604,10 +661,14 @@ connection.onCodeAction((params) => {
 	if (documentFixes) {
 		for (let diagnostic of params.context.diagnostics) {
 			let autoFix = disableRuleFixes[computeKey(diagnostic)];
+
 			if (autoFix) {
 				documentVersion = autoFix.documentVersion;
+
 				let ruleId = autoFix.problem.getRuleName();
+
 				let label = `Show documentation for "${ruleId}"`;
+
 				let command = server.Command.create(
 					label,
 					"_tslint.showRuleDocumentation",
@@ -616,6 +677,7 @@ connection.onCodeAction((params) => {
 					undefined,
 					ruleId,
 				);
+
 				let codeAction = server.CodeAction.create(
 					label,
 					command,
@@ -682,6 +744,7 @@ function createAutoFix(
 		problem: problem,
 		edits: edits,
 	};
+
 	return autofix;
 }
 
@@ -706,6 +769,7 @@ function createDisableRuleFix(
 		problem: problem,
 		edits: [disableEdit],
 	};
+
 	return disableFix;
 }
 
@@ -713,6 +777,7 @@ function sortFixes(fixes: AutoFix[]): AutoFix[] {
 	// The AutoFix.edits are sorted, so we sort on the first edit
 	return fixes.sort((a, b) => {
 		let editA: TSLintAutofixEdit = a.edits[0];
+
 		let editB: TSLintAutofixEdit = b.edits[0];
 
 		if (editA.range[0] < editB.range[0]) {
@@ -745,21 +810,25 @@ export function overlaps(
 		return nextFix.edits.some((next) => {
 			if (last.range[1].line > next.range[0].line) {
 				doesOverlap = true;
+
 				return true;
 			} else if (last.range[1].line < next.range[0].line) {
 				return false;
 			} else if (last.range[1].character >= next.range[0].character) {
 				doesOverlap = true;
+
 				return true;
 			}
 			return false;
 		});
 	});
+
 	return doesOverlap;
 }
 
 function getLastEdit(array: AutoFix[]): AutoFix | undefined {
 	let length = array.length;
+
 	if (length === 0) {
 		return undefined;
 	}
@@ -770,8 +839,10 @@ export function getAllNonOverlappingFixes(
 	fixes: AutoFix[],
 ): [AutoFix[], boolean] {
 	let nonOverlapping: AutoFix[] = [];
+
 	let hasOverlappingFixes = false;
 	fixes = sortFixes(fixes);
+
 	for (let autofix of fixes) {
 		if (!overlaps(getLastEdit(nonOverlapping), autofix)) {
 			nonOverlapping.push(autofix);
@@ -813,8 +884,11 @@ namespace AllFixesRequest {
 
 connection.onRequest(AllFixesRequest.type, async (params) => {
 	let result: AllFixesResult | undefined = undefined;
+
 	let uri = params.textDocument.uri;
+
 	let isOnSave = params.isOnSave;
+
 	let document = documents.get(uri);
 
 	if (!document) {
@@ -824,7 +898,9 @@ connection.onRequest(AllFixesRequest.type, async (params) => {
 	await forceValidation(connection, document);
 
 	let documentFixes = codeFixActions[uri];
+
 	let documentVersion: number = -1;
+
 	let settings = await settingsCache.get(uri);
 
 	if (!documentFixes) {
@@ -838,6 +914,7 @@ connection.onRequest(AllFixesRequest.type, async (params) => {
 	for (let fix of fixes) {
 		if (documentVersion === -1) {
 			documentVersion = fix.documentVersion;
+
 			break;
 		}
 	}
@@ -857,6 +934,7 @@ connection.onRequest(AllFixesRequest.type, async (params) => {
 		edits: concatenateEdits(allFixes),
 		overlappingFixes: overlappingEdits,
 	};
+
 	return result;
 });
 
@@ -865,6 +943,7 @@ function concatenateEdits(fixes: AutoFix[]): server.TextEdit[] {
 	fixes.forEach((each) => {
 		textEdits = textEdits.concat(createTextEdit(each));
 	});
+
 	return textEdits;
 }
 

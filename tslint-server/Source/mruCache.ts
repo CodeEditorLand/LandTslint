@@ -7,6 +7,7 @@ export class MruCache<T> {
 	public set(filePath: string, entry: T): void {
 		this._map.set(filePath, entry);
 		this._entries.add(filePath);
+
 		for (const key of this._entries.keys()) {
 			if (this._entries.size <= this._maxSize) {
 				break;

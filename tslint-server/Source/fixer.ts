@@ -22,13 +22,16 @@ let quoteFixCreator: FixCreator = (
 ): FixResult => {
 	// error message: ' should be "   or " should be '
 	const wrongQuote = problem.getFailure()[0];
+
 	const fixedQuote = wrongQuote === "'" ? '"' : "'";
+
 	const contents = document
 		.getText()
 		.slice(
 			problem.getStartPosition().getPosition() + 1,
 			problem.getEndPosition().getPosition() - 1,
 		);
+
 	return {
 		range: convertProblemPositionsToRange(problem),
 		text: `${fixedQuote}${contents}${fixedQuote}`,
@@ -50,6 +53,7 @@ let whiteSpaceFixCreator: FixCreator = (
 			problem.getStartPosition().getPosition(),
 			problem.getEndPosition().getPosition(),
 		);
+
 	return {
 		range: convertProblemPositionsToRange(problem),
 		text: ` ${contents}`,
@@ -63,6 +67,7 @@ let tripleEqualsFixCreator: FixCreator = (
 ): FixResult => {
 	// error message: '== should be ===' or '!= should be !=='
 	let contents: string | undefined = undefined;
+
 	if (problem.getFailure() === "== should be ===") {
 		contents = "===";
 	} else if (problem.getFailure() === "!= should be !==") {
@@ -87,18 +92,23 @@ let commentFormatFixCreator: FixCreator = (
 	//   'comment must start with uppercase letter'
 	function swapCase(contents: string, toLower: boolean): string {
 		let i = contents.search(/\S/);
+
 		if (i === -1) {
 			return contents;
 		}
 		let prefix = contents.substring(0, i);
+
 		let swap = toLower
 			? contents[i].toLowerCase()
 			: contents[i].toUpperCase();
+
 		let suffix = contents.substring(i + 1);
+
 		return `${prefix}${swap}${suffix}`;
 	}
 
 	let replacement;
+
 	const contents = document
 		.getText()
 		.slice(
@@ -109,13 +119,19 @@ let commentFormatFixCreator: FixCreator = (
 	switch (problem.getFailure()) {
 		case "comment must start with a space":
 			replacement = ` ${contents}`;
+
 			break;
+
 		case "comment must start with lowercase letter":
 			replacement = swapCase(contents, true);
+
 			break;
+
 		case "comment must start with uppercase letter":
 			replacement = swapCase(contents, false);
+
 			break;
+
 		default:
 			return undefined;
 	}
@@ -140,7 +156,9 @@ function convertProblemPositionsToRange(
 	problem: tslint.RuleFailure,
 ): [server.Position, server.Position] {
 	let startPosition = convertToServerPosition(problem.getStartPosition());
+
 	let endPosition = convertToServerPosition(problem.getEndPosition());
+
 	return [startPosition, endPosition];
 }
 
@@ -149,6 +167,7 @@ export function createVscFixForRuleFailure(
 	document: server.TextDocument,
 ): TSLintAutofixEdit | undefined {
 	let creator = fixes[problem.getRuleName()];
+
 	if (creator) {
 		return creator(problem, document);
 	}
