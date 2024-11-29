@@ -38,13 +38,17 @@ import {
 
 interface AllFixesParams {
 	readonly textDocument: TextDocumentIdentifier;
+
 	readonly isOnSave: boolean;
 }
 
 interface AllFixesResult {
 	readonly documentVersion: number;
+
 	readonly edits: TextEdit[];
+
 	readonly ruleId?: string;
+
 	readonly overlappingFixes: boolean;
 }
 
@@ -90,19 +94,33 @@ namespace StatusNotification {
 
 interface Settings {
 	enable: boolean;
+
 	jsEnable: boolean;
+
 	rulesDirectory: string | string[];
+
 	configFile: string;
+
 	ignoreDefinitionFiles: boolean;
+
 	exclude: string | string[];
+
 	validateWithDefaultConfig: boolean;
+
 	nodePath: string | undefined;
+
 	run: "onSave" | "onType";
+
 	alwaysShowRuleFailuresAsWarnings: boolean;
+
 	alwaysShowStatus: boolean;
+
 	autoFixOnSave: boolean | string[];
+
 	packageManager: "npm" | "yarn";
+
 	trace: any;
+
 	workspaceFolderPath: string; // 'virtual' setting sent to the server
 }
 
@@ -118,6 +136,7 @@ export function activate(context: ExtensionContext) {
 	let serverRunning: boolean = false;
 
 	statusBarItem.text = "TSLint";
+
 	statusBarItem.command = "tslint.showOutputChannel";
 
 	function showStatusBarItem(show: boolean): void {
@@ -133,7 +152,9 @@ export function activate(context: ExtensionContext) {
 			// an error got addressed fix, write to the output that the status is OK
 			client.info("vscode-tslint: Status is OK");
 		}
+
 		tslintStatus = status;
+
 		updateStatusBarVisibility(window.activeTextEditor);
 	}
 
@@ -156,6 +177,7 @@ export function activate(context: ExtensionContext) {
 		if (isJsEnable && isJavaScriptDocument(document.languageId)) {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -176,6 +198,7 @@ export function activate(context: ExtensionContext) {
 
 				break;
 		}
+
 		let uri = editor ? editor.document.uri : undefined;
 
 		let enabled = workspace.getConfiguration("tslint", uri)["enable"];
@@ -202,6 +225,7 @@ export function activate(context: ExtensionContext) {
 	}
 
 	window.onDidChangeActiveTextEditor(updateStatusBarVisibility);
+
 	updateStatusBarVisibility(window.activeTextEditor);
 
 	// We need to go one level up since an extension compile the js code into
@@ -251,6 +275,7 @@ export function activate(context: ExtensionContext) {
 		diagnosticCollectionName: "tslint",
 		initializationFailedHandler: (error) => {
 			client.error("Server initialization failed.", error);
+
 			client.outputChannel.show(true);
 
 			return false;
@@ -267,6 +292,7 @@ export function activate(context: ExtensionContext) {
 				if (!context.diagnostics || context.diagnostics.length === 0) {
 					return [];
 				}
+
 				let tslintDiagnostics: Diagnostic[] = [];
 
 				for (let diagnostic of context.diagnostics) {
@@ -274,9 +300,11 @@ export function activate(context: ExtensionContext) {
 						tslintDiagnostics.push(diagnostic);
 					}
 				}
+
 				if (tslintDiagnostics.length === 0) {
 					return [];
 				}
+
 				let newContext: CodeActionContext = Object.assign({}, context, {
 					diagnostics: tslintDiagnostics,
 				} as CodeActionContext);
@@ -292,6 +320,7 @@ export function activate(context: ExtensionContext) {
 					if (!params.items) {
 						return [];
 					}
+
 					let result = next(params, token, next);
 
 					let scopeUri = "";
@@ -303,6 +332,7 @@ export function activate(context: ExtensionContext) {
 							scopeUri = item.scopeUri;
 						}
 					}
+
 					let resource =
 						client.protocol2CodeConverter.asUri(scopeUri);
 
@@ -317,6 +347,7 @@ export function activate(context: ExtensionContext) {
 								workspaceFolder.uri.fsPath;
 						}
 					}
+
 					return result;
 				},
 			} as WorkspaceMiddleware,
@@ -324,6 +355,7 @@ export function activate(context: ExtensionContext) {
 	};
 
 	let client = new LanguageClient("tslint", serverOptions, clientOptions);
+
 	client.registerProposedFeatures();
 
 	const running = "Linter is running.";
@@ -333,13 +365,18 @@ export function activate(context: ExtensionContext) {
 	client.onDidChangeState((event) => {
 		if (event.newState === ClientState.Running) {
 			client.info(running);
+
 			statusBarItem.tooltip = running;
+
 			serverRunning = true;
 		} else {
 			client.info(stopped);
+
 			statusBarItem.tooltip = stopped;
+
 			serverRunning = false;
 		}
+
 		updateStatusBarVisibility(window.activeTextEditor);
 	});
 
@@ -347,6 +384,7 @@ export function activate(context: ExtensionContext) {
 		client.onNotification(StatusNotification.type, (params) => {
 			updateStatus(params.state);
 		});
+
 		client.onRequest(NoTSLintLibraryRequest.type, (params) => {
 			let uri: Uri = Uri.parse(params.source.uri);
 
@@ -355,9 +393,11 @@ export function activate(context: ExtensionContext) {
 			let packageManager = workspace
 				.getConfiguration("tslint", uri)
 				.get("packageManager", "npm");
+
 			client.info(
 				getInstallFailureMessage(uri, workspaceFolder, packageManager),
 			);
+
 			updateStatus(Status.warn);
 
 			return {};
@@ -408,11 +448,13 @@ export function activate(context: ExtensionContext) {
 		if (configFile) {
 			settings.configFile = convertAbsolute(configFile, folder);
 		}
+
 		let nodePath = settings.nodePath;
 
 		if (nodePath) {
 			settings.nodePath = convertAbsolute(nodePath, folder);
 		}
+
 		if (settings.rulesDirectory) {
 			if (Array.isArray(settings.rulesDirectory)) {
 				for (let i = 0; i < settings.rulesDirectory.length; i++) {
@@ -434,11 +476,13 @@ export function activate(context: ExtensionContext) {
 		if (path.isAbsolute(file)) {
 			return file;
 		}
+
 		let folderPath = folder.uri.fsPath;
 
 		if (!folderPath) {
 			return file;
 		}
+
 		return path.join(folderPath, file);
 	}
 
@@ -460,6 +504,7 @@ export function activate(context: ExtensionContext) {
 
 				return true;
 			}
+
 			return textEditor.edit((mutator) => {
 				for (let edit of edits) {
 					mutator.replace(
@@ -469,6 +514,7 @@ export function activate(context: ExtensionContext) {
 				}
 			});
 		}
+
 		return true;
 	}
 
@@ -493,7 +539,9 @@ export function activate(context: ExtensionContext) {
 			let prefixIndex = ruleLine.firstNonWhitespaceCharacterIndex;
 
 			let prefix = ruleLine.text.substr(0, prefixIndex);
+
 			edit.newText = prefix + edit.newText;
+
 			applyTextEdits(uri, documentVersion, edits);
 		}
 	}
@@ -509,6 +557,7 @@ export function activate(context: ExtensionContext) {
 		if (!ruleId) {
 			return;
 		}
+
 		commands.executeCommand(
 			"vscode.open",
 			Uri.parse(tslintDocBaseURL + "/" + ruleId),
@@ -520,11 +569,13 @@ export function activate(context: ExtensionContext) {
 		if (!serverRunning) {
 			return;
 		}
+
 		let textEditor = window.activeTextEditor;
 
 		if (!textEditor) {
 			return;
 		}
+
 		return doFixAllProblems(textEditor.document, undefined); // no time budget
 	}
 
@@ -570,6 +621,7 @@ export function activate(context: ExtensionContext) {
 
 			return;
 		}
+
 		if (folders.length === 1) {
 			folder = folders[0];
 		} else {
@@ -577,12 +629,14 @@ export function activate(context: ExtensionContext) {
 				placeHolder:
 					"Select the folder for generating the 'tslint.json' file",
 			};
+
 			folder = await window.showWorkspaceFolderPick(options);
 
 			if (!folder) {
 				return;
 			}
 		}
+
 		const folderPath = folder.uri.fsPath;
 
 		const tslintConfigFile = path.join(folderPath, "tslint.json");
@@ -593,6 +647,7 @@ export function activate(context: ExtensionContext) {
 			);
 
 			let document = await workspace.openTextDocument(tslintConfigFile);
+
 			window.showTextDocument(document);
 		} else {
 			const tslintCmd = await findTslint(folderPath);
@@ -600,10 +655,12 @@ export function activate(context: ExtensionContext) {
 			const cmd = `${tslintCmd} --init`;
 
 			const p = exec(cmd, { cwd: folderPath, env: process.env });
+
 			p.on("exit", async (code: number, _signal: string) => {
 				if (code === 0) {
 					let document =
 						await workspace.openTextDocument(tslintConfigFile);
+
 					window.showTextDocument(document);
 				} else {
 					window.showErrorMessage(
@@ -631,6 +688,7 @@ export function activate(context: ExtensionContext) {
 			) {
 				return;
 			}
+
 			e.waitUntil(
 				doFixAllProblems(document, 500), // total willSave time budget is 1500
 			);
@@ -669,6 +727,7 @@ export function activate(context: ExtensionContext) {
 
 						break;
 					}
+
 					if (loopCount++ > 10) {
 						console.log(
 							`TSLint auto fix on save maximum retries exceeded.`,
@@ -676,6 +735,7 @@ export function activate(context: ExtensionContext) {
 
 						break;
 					}
+
 					if (result) {
 						// ensure that document versions on the client are in sync
 						if (lastVersion !== document.version) {
@@ -685,12 +745,14 @@ export function activate(context: ExtensionContext) {
 
 							break;
 						}
+
 						retry = false;
 
 						if (lastVersion !== result.documentVersion) {
 							console.log(
 								"TSLint auto fix on save, server document version different than client version",
 							);
+
 							retry = true; // retry to get the fixes matching the document
 						} else {
 							// try to apply the edits from the server
@@ -734,6 +796,7 @@ export function activate(context: ExtensionContext) {
 						break;
 					}
 				}
+
 				return null;
 			});
 
@@ -742,8 +805,10 @@ export function activate(context: ExtensionContext) {
 
 	configurationChangedListener =
 		workspace.onDidChangeConfiguration(configurationChanged);
+
 	willSaveTextDocumentListener =
 		workspace.onWillSaveTextDocument(willSaveTextDocument);
+
 	configurationChanged();
 
 	context.subscriptions.push(

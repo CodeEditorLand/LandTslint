@@ -12,14 +12,23 @@ import { MruCache } from "./mruCache";
 
 export interface RunConfiguration {
 	readonly jsEnable?: boolean;
+
 	readonly rulesDirectory?: string | string[];
+
 	readonly configFile?: string;
+
 	readonly ignoreDefinitionFiles?: boolean;
+
 	readonly exclude?: string | string[];
+
 	readonly validateWithDefaultConfig?: boolean;
+
 	readonly nodePath?: string;
+
 	readonly packageManager?: "npm" | "yarn";
+
 	readonly traceLevel?: "verbose" | "normal";
+
 	readonly workspaceFolderPath?: string;
 }
 
@@ -27,7 +36,9 @@ interface Configuration {
 	readonly linterConfiguration:
 		| tslint.Configuration.IConfigurationFile
 		| undefined;
+
 	isDefaultLinterConfig: boolean;
+
 	readonly path?: string;
 }
 
@@ -38,11 +49,13 @@ class ConfigCache {
 
 	constructor() {
 		this.filePath = undefined;
+
 		this.configuration = undefined;
 	}
 
 	public set(filePath: string, configuration: Configuration) {
 		this.filePath = filePath;
+
 		this.configuration = configuration;
 	}
 
@@ -58,14 +71,18 @@ class ConfigCache {
 
 	public flush() {
 		this.filePath = undefined;
+
 		this.configuration = undefined;
 	}
 }
 
 export interface RunResult {
 	readonly lintResult: tslint.LintResult;
+
 	readonly warnings: string[];
+
 	readonly workspaceFolderPath?: string;
+
 	readonly configFilePath?: string;
 }
 
@@ -88,12 +105,14 @@ export class TsLintRunner {
 		string,
 		typeof tslint | undefined
 	>();
+
 	private readonly document2LibraryCache = new MruCache<
 		() => typeof tslint | undefined
 	>(100);
 
 	// map stores undefined values to represent failed resolutions
 	private readonly globalPackageManagerPath = new Map<string, string>();
+
 	private readonly configCache = new ConfigCache();
 
 	constructor(private trace: (data: string) => void) {}
@@ -112,6 +131,7 @@ export class TsLintRunner {
 		if (!this.document2LibraryCache.has(filePath)) {
 			this.loadLibrary(filePath, configuration, warnings);
 		}
+
 		this.trace("validateTextDocument: loaded tslint library");
 
 		if (!this.document2LibraryCache.has(filePath)) {
@@ -155,6 +175,7 @@ export class TsLintRunner {
 			if (!normalizedFiles.has(fileName)) {
 				normalizedFiles.set(fileName, path.normalize(fileName));
 			}
+
 			return normalizedFiles.get(fileName) === normalizedPath;
 		});
 	}
@@ -190,6 +211,7 @@ export class TsLintRunner {
 				nonOverlapping.push(...replacements);
 			}
 		}
+
 		return nonOverlapping;
 	}
 
@@ -207,6 +229,7 @@ export class TsLintRunner {
 				replacements = fix;
 			}
 		}
+
 		return replacements || [];
 	}
 
@@ -288,8 +311,10 @@ export class TsLintRunner {
 
 					return;
 				}
+
 				this.tslintPath2Library.set(tsLintPath, library);
 			}
+
 			return this.tslintPath2Library.get(tsLintPath);
 		});
 	}
@@ -313,8 +338,10 @@ export class TsLintRunner {
 			} else if (packageManager === "yarn") {
 				path = server.Files.resolveGlobalYarnPath(this.trace);
 			}
+
 			this.globalPackageManagerPath.set(packageManager, path!);
 		}
+
 		this.trace(
 			`Done - Resolve Global Package Manager Path for: ${packageManager}`,
 		);
@@ -343,12 +370,14 @@ export class TsLintRunner {
 			this.trace(
 				`Changed directory to ${configuration.workspaceFolderPath}`,
 			);
+
 			process.chdir(configuration.workspaceFolderPath);
 		}
 
 		const configFile = configuration.configFile || null;
 
 		let linterConfiguration: Configuration | undefined;
+
 		this.trace("validateTextDocument: about to getConfiguration");
 
 		try {
@@ -362,6 +391,7 @@ export class TsLintRunner {
 			this.trace(
 				`No linting: exception when getting tslint configuration for ${filePath}, configFile= ${configFile}`,
 			);
+
 			warnings.push(getConfigurationFailureMessage(err));
 
 			return {
@@ -375,6 +405,7 @@ export class TsLintRunner {
 
 			return emptyResult;
 		}
+
 		this.trace("validateTextDocument: configuration fetched");
 
 		if (isJsDocument(filePath) && !configuration.jsEnable) {
@@ -430,8 +461,10 @@ export class TsLintRunner {
 
 		const captureWarnings = (message?: any) => {
 			warnings.push(message);
+
 			originalConsoleWarn(message);
 		};
+
 		console.warn = captureWarnings;
 
 		try {
@@ -440,13 +473,17 @@ export class TsLintRunner {
 				options,
 				typeof contents === "string" ? undefined : contents,
 			);
+
 			this.trace(`Linting: start linting`);
+
 			tslint.lint(
 				filePath,
 				typeof contents === "string" ? contents : "",
 				linterConfiguration.linterConfiguration,
 			);
+
 			result = tslint.getResult();
+
 			this.trace(`Linting: ended linting`);
 		} finally {
 			console.warn = originalConsoleWarn;
@@ -487,6 +524,7 @@ export class TsLintRunner {
 				linter.findConfigurationPath(configFileName, filePath) ===
 				undefined;
 		}
+
 		const configurationResult = linter.findConfiguration(
 			configFileName,
 			filePath,
@@ -497,6 +535,7 @@ export class TsLintRunner {
 		if ((configurationResult as any).error) {
 			throw (configurationResult as any).error;
 		}
+
 		linterConfiguration = configurationResult.results;
 
 		// In tslint version 5 the 'no-unused-variable' rules breaks the TypeScript language service plugin.
@@ -511,6 +550,7 @@ export class TsLintRunner {
 			) {
 				linterConfiguration.rules.delete("no-unused-variable");
 			}
+
 			if (
 				linterConfiguration.jsRules &&
 				linterConfiguration.jsRules instanceof Map
@@ -551,6 +591,7 @@ export class TsLintRunner {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -562,6 +603,7 @@ export class TsLintRunner {
 
 			return;
 		}
+
 		this.trace(
 			"tslint configuration:" + util.inspect(configuration, undefined, 4),
 		);
@@ -575,6 +617,7 @@ export class TsLintRunner {
 		const env = process.env;
 
 		const newEnv = Object.create(null);
+
 		Object.keys(env).forEach((key) => (newEnv[key] = env[key]));
 
 		if (nodePath) {
@@ -584,8 +627,10 @@ export class TsLintRunner {
 			} else {
 				newEnv[nodePathKey] = nodePath;
 			}
+
 			this.trace(`NODE_PATH value is: ${newEnv[nodePathKey]}`);
 		}
+
 		newEnv.ELECTRON_RUN_AS_NODE = "1";
 
 		const spanwResults = cp.spawnSync(process.argv0, ["-e", app], {
@@ -651,6 +696,7 @@ function isExcludedFromLinterOptions(
 	) {
 		return false;
 	}
+
 	return config.linterOptions.exclude.some((pattern) =>
 		testForExclusionPattern(fileName, pattern),
 	);
@@ -662,5 +708,6 @@ function getConfigurationFailureMessage(err: any): string {
 	if (typeof err.message === "string" || err.message instanceof String) {
 		errorMessage = err.message;
 	}
+
 	return `vscode-tslint: Cannot read tslint configuration - '${errorMessage}'`;
 }

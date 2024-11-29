@@ -5,6 +5,7 @@ import * as server from "vscode-languageserver";
 
 export interface TSLintAutofixEdit {
 	range: [server.Position, server.Position];
+
 	text: string;
 }
 
@@ -47,6 +48,7 @@ let whiteSpaceFixCreator: FixCreator = (
 	if (problem.getFailure() !== "missing whitespace") {
 		return undefined;
 	}
+
 	const contents = document
 		.getText()
 		.slice(
@@ -75,6 +77,7 @@ let tripleEqualsFixCreator: FixCreator = (
 	} else {
 		return undefined;
 	}
+
 	return {
 		range: convertProblemPositionsToRange(problem),
 		text: `${contents}`,
@@ -96,6 +99,7 @@ let commentFormatFixCreator: FixCreator = (
 		if (i === -1) {
 			return contents;
 		}
+
 		let prefix = contents.substring(0, i);
 
 		let swap = toLower
@@ -135,6 +139,7 @@ let commentFormatFixCreator: FixCreator = (
 		default:
 			return undefined;
 	}
+
 	return {
 		range: convertProblemPositionsToRange(problem),
 		text: replacement,
@@ -171,5 +176,6 @@ export function createVscFixForRuleFailure(
 	if (creator) {
 		return creator(problem, document);
 	}
+
 	return undefined;
 }

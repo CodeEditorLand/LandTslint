@@ -31,14 +31,20 @@ export interface ValueCallback {
 
 export class Delayer<T> {
 	private timeout: NodeJS.Timer | null;
+
 	private completionPromise: Promise<T> | null;
+
 	private onSuccess: ValueCallback | null;
+
 	private task: ITask<T> | null;
 
 	constructor(public defaultDelay: number) {
 		this.timeout = null;
+
 		this.completionPromise = null;
+
 		this.onSuccess = null;
+
 		this.task = null;
 	}
 
@@ -47,6 +53,7 @@ export class Delayer<T> {
 		delay: number = this.defaultDelay,
 	): Promise<T> {
 		this.task = task;
+
 		this.cancelTimeout();
 
 		if (!this.completionPromise) {
@@ -54,9 +61,11 @@ export class Delayer<T> {
 				this.onSuccess = resolve;
 			}).then(() => {
 				this.completionPromise = null;
+
 				this.onSuccess = null;
 
 				var result = this.task!();
+
 				this.task = null;
 
 				return result;
@@ -68,9 +77,11 @@ export class Delayer<T> {
 				this.onSuccess = resolve;
 			}).then(() => {
 				this.completionPromise = null;
+
 				this.onSuccess = null;
 
 				const task = this.task;
+
 				this.task = null;
 
 				return task!();
@@ -79,6 +90,7 @@ export class Delayer<T> {
 
 		this.timeout = setTimeout(() => {
 			this.timeout = null;
+
 			this.onSuccess!(null);
 		}, delay);
 
@@ -91,11 +103,14 @@ export class Delayer<T> {
 
 	public cancel(): void {
 		this.cancelTimeout();
+
 		this.completionPromise = null;
 	}
+
 	private cancelTimeout(): void {
 		if (this.timeout !== null) {
 			clearTimeout(this.timeout);
+
 			this.timeout = null;
 		}
 	}
