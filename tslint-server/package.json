@@ -1,16 +1,16 @@
 {
+	"name": "tslint-server",
+	"description": "TSLint Linter Server",
+	"scripts": {
+		"compile": "installServerIntoExtension ../tslint ./package.json ./src/tsconfig.json && tsc -p ./src"
+	},
 	"dependencies": {
 		"minimatch": "10.0.1",
 		"semver": "7.6.3"
 	},
-	"description": "TSLint Linter Server",
 	"devDependencies": {
 		"@types/minimatch": "5.1.2",
 		"@types/node": "22.10.1",
 		"@types/semver": "7.5.8"
-	},
-	"name": "tslint-server",
-	"scripts": {
-		"compile": "installServerIntoExtension ../tslint ./package.json ./src/tsconfig.json && tsc -p ./src"
 	}
 }

@@ -1,7 +1,7 @@
 {
-	"dependencies": {},
+	"name": "@codeeditorland/tslint",
 	"description": "The umbrella project for the tslint client and server",
-	"devDependencies": {},
 	"main": " ",
-	"name": "@codeeditorland/tslint"
+	"dependencies": {},
+	"devDependencies": {}
 }
