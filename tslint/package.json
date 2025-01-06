@@ -214,7 +214,7 @@
 	},
 	"devDependencies": {
 		"@types/glob": "8.1.0",
-		"@types/node": "22.10.1",
+		"@types/node": "22.10.5",
 		"glob": "11.0.0"
 	},
 	"icon": "TSLint_icon.png",
