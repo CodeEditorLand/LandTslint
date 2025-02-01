@@ -6,11 +6,11 @@
 	},
 	"dependencies": {
 		"minimatch": "10.0.1",
-		"semver": "7.6.3"
+		"semver": "7.7.0"
 	},
 	"devDependencies": {
 		"@types/minimatch": "5.1.2",
-		"@types/node": "22.10.10",
+		"@types/node": "22.13.0",
 		"@types/semver": "7.5.8"
 	}
 }
